@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#667eea" />
+    <meta name="description" content="FinTechCo Fraud Detection System - Real-time transaction monitoring and risk assessment dashboard" />
+    <meta name="keywords" content="fraud detection, fintech, security, machine learning, real-time monitoring" />
+    <meta name="author" content="FinTechCo Development Team" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fraud-detection.fintechco.com/" />
+    <meta property="og:title" content="FinTechCo Fraud Detection System" />
+    <meta property="og:description" content="Advanced fraud detection system with real-time monitoring and ML-powered risk assessment" />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://fraud-detection.fintechco.com/" />
+    <meta property="twitter:title" content="FinTechCo Fraud Detection System" />
+    <meta property="twitter:description" content="Advanced fraud detection system with real-time monitoring and ML-powered risk assessment" />
+    <meta property="twitter:image" content="%PUBLIC_URL%/twitter-image.png" />
+
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' http://localhost:5000 ws://localhost:3000;" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+
+    <!-- Preconnect to improve performance -->
+    <link rel="preconnect" href="http://localhost:5000" />
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Favicon variations -->
+    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <title>FinTechCo Fraud Detection System</title>
+    
+    <style>
+      /* Critical CSS for initial load */
+      body {
+        margin: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #f5f6fa;
+        color: #2c3e50;
+      }
+      
+      /* Loading screen */
+      .initial-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+      }
+      
+      .loading-logo {
+        font-size: 48px;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+      }
+      
+      .loading-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      
+      .loading-subtitle {
+        font-size: 14px;
+        opacity: 0.8;
+        margin-bottom: 40px;
+      }
+      
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      .loading-status {
+        margin-top: 20px;
+        font-size: 12px;
+        opacity: 0.7;
+      }
+      
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Hide loading screen when React loads */
+      .app-loaded .initial-loading {
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      /* Error fallback styles */
+      .error-fallback {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        text-align: center;
+      }
+      
+      .error-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+      }
+      
+      .error-title {
+        font-size: 24px;
+        color: #e74c3c;
+        margin-bottom: 12px;
+      }
+      
+      .error-message {
+        color: #666;
+        margin-bottom: 20px;
+        max-width: 500px;
+        line-height: 1.6;
+      }
+      
+      .error-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .error-button {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      
+      .error-button:hover {
+        background: #2980b9;
+      }
+      
+      .error-button.secondary {
+        background: #95a5a6;
+      }
+      
+      .error-button.secondary:hover {
+        background: #7f8c8d;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <div class="error-fallback">
+        <div class="error-icon">⚠️</div>
+        <h1 class="error-title">JavaScript Required</h1>
+        <p class="error-message">
+          The FinTechCo Fraud Detection System requires JavaScript to function properly. 
+          Please enable JavaScript in your browser settings and refresh the page.
+        </p>
+        <div class="error-actions">
+          <button class="error-button" onclick="window.location.reload()">
+            Refresh Page
+          </button>
+        </div>
+      </div>
+    </noscript>
+    
+    <!-- Initial loading screen (hidden by default) -->
+    <div class="initial-loading" id="initial-loading" style="display: none;">
+      <div class="loading-logo">🛡️</div>
+      <h1 class="loading-title">FinTechCo Fraud Detection</h1>
+      <p class="loading-subtitle">Initializing security systems...</p>
+      <div class="loading-spinner"></div>
+      <div class="loading-status" id="loading-status">Loading application...</div>
+    </div>
+    
+    <!-- React app root -->
+    <div id="root"></div>
+    
+    <!-- Error boundary fallback (shown if React fails to load) -->
+    <div class="error-fallback" id="error-fallback" style="display: none;">
+      <div class="error-icon">💥</div>
+      <h1 class="error-title">Application Error</h1>
+      <p class="error-message">
+        The fraud detection system encountered an unexpected error and could not load properly. 
+        This may be due to a network issue or a problem with the application.
+      </p>
+      <div class="error-actions">
+        <button class="error-button" onclick="window.location.reload()">
+          Reload Application
+        </button>
+        <button class="error-button secondary" onclick="window.location.href='mailto:support@fintechco.com?subject=Fraud Detection System Error'">
+          Report Issue
+        </button>
+      </div>
+    </div>
+    
+    <script>
+      // Update loading status
+      function updateLoadingStatus(status) {
+        const statusElement = document.getElementById('loading-status');
+        if (statusElement) {
+          statusElement.textContent = status;
+        }
+      }
+      
+      // Hide loading screen when React app loads
+      function hideLoadingScreen() {
+        document.body.classList.add('app-loaded');
+        setTimeout(() => {
+          const loadingElement = document.getElementById('initial-loading');
+          if (loadingElement) {
+            loadingElement.style.display = 'none';
+          }
+        }, 500);
+      }
+      
+      // Show error fallback if React fails to load
+      function showErrorFallback() {
+        const loadingElement = document.getElementById('initial-loading');
+        const errorElement = document.getElementById('error-fallback');
+        
+        if (loadingElement) loadingElement.style.display = 'none';
+        if (errorElement) errorElement.style.display = 'flex';
+      }
+      
+      // Global error handler
+      window.addEventListener('error', function(event) {
+        console.error('Global error:', event.error);
+        
+        // If React hasn't loaded yet, show error fallback
+        if (!window.React) {
+          showErrorFallback();
+        }
+      });
+      
+      // Unhandled promise rejection handler
+      window.addEventListener('unhandledrejection', function(event) {
+        console.error('Unhandled promise rejection:', event.reason);
+      });
+      
+      // Performance monitoring
+      if ('performance' in window) {
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            const perfData = performance.getEntriesByType('navigation')[0];
+            if (perfData) {
+              console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+            }
+          }, 0);
+        });
+      }
+      
+      // Service worker registration (for future PWA features)
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+            })
+            .catch(function(registrationError) {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+      
+      // Expose utilities for React app
+      window.FraudDetectionUtils = {
+        updateLoadingStatus,
+        hideLoadingScreen,
+        showErrorFallback
+      };
+    </script>
+  </body>
+</html>

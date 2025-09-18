@@ -1,0 +1,50 @@
+{
+  "name": "fraud-detection-system",
+  "version": "2.0.0",
+  "description": "Complete fraud detection system with ML-powered risk assessment",
+  "private": true,
+  "scripts": {
+    "dev": "./scripts/dev-start.sh",
+    "dev:start": "./scripts/dev-start.sh",
+    "dev:stop": "./scripts/dev-stop.sh",
+    "start": "npm run dev",
+    "stop": "npm run dev:stop",
+    "backend": "cd backend && python3 app.py",
+    "frontend": "cd frontend && npm start",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "install:backend": "cd backend && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
+    "install:frontend": "cd frontend && npm install",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && python3 -m pytest",
+    "test:frontend": "cd frontend && npm test -- --watchAll=false",
+    "build": "cd frontend && npm run build",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && python3 -m flake8 .",
+    "lint:frontend": "cd frontend && npm run lint",
+    "clean": "rm -rf backend/venv frontend/node_modules frontend/build logs .tmp",
+    "logs": "tail -f logs/backend.log logs/frontend.log",
+    "logs:backend": "tail -f logs/backend.log",
+    "logs:frontend": "tail -f logs/frontend.log",
+    "health": "curl -s http://localhost:5001/health | jq ."
+  },
+  "keywords": [
+    "fraud-detection",
+    "machine-learning",
+    "fintech",
+    "react",
+    "flask",
+    "typescript",
+    "python"
+  ],
+  "author": "FinTechCo Development Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0",
+    "python": ">=3.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fintechco/fraud-detection.git"
+  }
+}
