@@ -337,10 +337,10 @@ class ApiService {
 
     // Initial fetch
     poll();
-    
+
     // Set up interval
     const intervalId = setInterval(poll, interval);
-    
+
     // Return cleanup function
     return () => clearInterval(intervalId);
   }
