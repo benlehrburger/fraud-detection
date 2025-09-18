@@ -24,7 +24,8 @@ class FraudDetectionService:
     
     def __init__(self):
         self.risk_threshold = Decimal('0.7')
-        self.high_risk_countries = ['XX', 'YY', 'ZZ']
+        self.high_risk_countries = ['RU', 'CN', 'IR', 'KP', 'SY', 'RUSSIA', 'CHINA', 'IRAN']
+        self.high_risk_merchants = ['CASH ADVANCE', 'CASINO', 'GAMBLING', 'CRYPTO', 'ADULT', 'UNKNOWN MERCHANT']
         
     def analyze_transaction(self, transaction: Transaction) -> Dict:
         """
@@ -34,16 +35,24 @@ class FraudDetectionService:
         risk_score = Decimal('0.0')
         risk_factors = []
         
-        # Check amount threshold
-        if transaction.amount > Decimal('10000'):
-            risk_score += Decimal('0.3')
+        # Check amount threshold - lowered for better detection
+        if transaction.amount > Decimal('5000'):
+            risk_score += Decimal('0.4')
             risk_factors.append('high_amount')
+        elif transaction.amount > Decimal('2000'):
+            risk_score += Decimal('0.2')
+            risk_factors.append('elevated_amount')
             
         # Check location
         if self._is_high_risk_location(transaction.location):
             risk_score += Decimal('0.4')
             risk_factors.append('risky_location')
-            
+
+        # Check merchant type
+        if self._is_high_risk_merchant(transaction.merchant):
+            risk_score += Decimal('0.3')
+            risk_factors.append('risky_merchant')
+
         # TODO: Add velocity checks
         # TODO: Add ML model scoring
         
@@ -63,5 +72,11 @@ class FraudDetectionService:
         return 'LOW'
         
     def _is_high_risk_location(self, location: str) -> bool:
-        # Simplified check - would be more complex in production
-        return any(country in location for country in self.high_risk_countries)
+        # Check for high-risk countries and regions
+        location_upper = location.upper()
+        return any(country in location_upper for country in self.high_risk_countries)
+
+    def _is_high_risk_merchant(self, merchant: str) -> bool:
+        # Check for high-risk merchant types
+        merchant_upper = merchant.upper()
+        return any(risk_merchant in merchant_upper for risk_merchant in self.high_risk_merchants)

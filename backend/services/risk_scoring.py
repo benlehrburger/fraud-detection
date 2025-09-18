@@ -98,12 +98,19 @@ class RiskScoringService:
         current_amount = Decimal(str(transaction_data.get('amount', 0)))
         
         if not user_history:
-            # No history - flag very high amounts
+            # No history - flag high amounts with graduated scoring
             if current_amount > Decimal('5000'):
                 return RiskFactor(
                     name='amount_anomaly',
                     weight=self.base_weights['amount_anomaly'],
-                    value=Decimal('0.8'),
+                    value=Decimal('0.9'),
+                    description=f'Very high amount ${current_amount} with no transaction history'
+                )
+            elif current_amount > Decimal('2000'):
+                return RiskFactor(
+                    name='amount_anomaly',
+                    weight=self.base_weights['amount_anomaly'],
+                    value=Decimal('0.6'),
                     description=f'High amount ${current_amount} with no transaction history'
                 )
             return None
@@ -173,7 +180,7 @@ class RiskScoringService:
         
         # High-risk countries/regions
         high_risk_indicators = ['UNKNOWN', 'OFFSHORE', 'SANCTIONED']
-        high_risk_countries = ['XX', 'YY', 'ZZ']  # Placeholder country codes
+        high_risk_countries = ['RU', 'CN', 'IR', 'KP', 'SY', 'RUSSIA', 'CHINA', 'IRAN', 'MOSCOW', 'BEIJING']
         
         risk_score = Decimal('0.0')
         description = ""
@@ -226,7 +233,7 @@ class RiskScoringService:
         merchant = transaction_data.get('merchant', '').upper()
         
         # High-risk merchant categories
-        high_risk_merchants = ['CASINO', 'GAMBLING', 'CRYPTO', 'ADULT', 'UNKNOWN MERCHANT']
+        high_risk_merchants = ['CASINO', 'GAMBLING', 'CRYPTO', 'ADULT', 'UNKNOWN MERCHANT', 'CASH ADVANCE', 'ATM CASH', 'WIRE TRANSFER']
         
         for risk_merchant in high_risk_merchants:
             if risk_merchant in merchant:

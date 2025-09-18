@@ -117,7 +117,30 @@
 }
 
 .transaction-table-container {
-  overflow-x: auto;
+  overflow: auto;
+  max-height: calc(8 * 60px + 60px); /* 8 rows * row height + header height */
+  border-radius: 0 0 20px 20px;
+}
+
+/* Custom scrollbar styling */
+.transaction-table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.transaction-table-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.transaction-table-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.transaction-table-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .transaction-table {
@@ -136,6 +159,10 @@
   white-space: nowrap;
   font-size: 14px;
   letter-spacing: 0.02em;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
 }
 
 .transaction-table th.sortable {
@@ -168,18 +195,6 @@
 .transaction-row.risk-critical {
   border-left: 5px solid #ef4444;
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(220, 38, 38, 0.03) 100%);
-  position: relative;
-}
-
-.transaction-row.risk-critical::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 5px;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
 }
 
 .transaction-row.risk-high {

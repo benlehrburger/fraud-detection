@@ -364,7 +364,7 @@ const App: React.FC = () => {
       <footer className="app-footer">
         <div className="footer-content">
           <div className="footer-left">
-            <p>&copy; 2024 FinTechCo. All rights reserved.</p>
+            <p>&copy; 2025 FinTechCo. All rights reserved.</p>
             <p>Fraud Detection System v2.0</p>
           </div>
           <div className="footer-right">

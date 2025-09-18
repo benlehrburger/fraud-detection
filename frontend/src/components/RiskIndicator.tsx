@@ -2,7 +2,7 @@ import React from 'react';
 import './RiskIndicator.css';
 
 interface RiskIndicatorProps {
-  level: 'MINIMAL' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' | 'NORMAL';
+  level: 'MINIMAL' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' | 'NORMAL' | 'APPROVE' | 'MONITOR' | 'REVIEW' | 'BLOCK';
   score?: number;
   confidence?: number;
   trends?: {
@@ -26,39 +26,43 @@ export const RiskIndicator: React.FC<RiskIndicatorProps> = ({
   const getRiskConfig = (riskLevel: string) => {
     switch (riskLevel.toUpperCase()) {
       case 'CRITICAL':
+      case 'BLOCK':
         return {
           color: '#e74c3c',
           bgColor: 'rgba(231, 76, 60, 0.1)',
           icon: '🚨',
-          label: 'Critical Risk',
-          description: 'Immediate action required',
+          label: riskLevel.toUpperCase() === 'BLOCK' ? 'Blocked' : 'Critical Risk',
+          description: riskLevel.toUpperCase() === 'BLOCK' ? 'Transaction blocked' : 'Immediate action required',
           intensity: 100
         };
       case 'HIGH':
+      case 'REVIEW':
         return {
           color: '#f39c12',
           bgColor: 'rgba(243, 156, 18, 0.1)',
           icon: '⚠️',
-          label: 'High Risk',
-          description: 'Enhanced monitoring active',
+          label: riskLevel.toUpperCase() === 'REVIEW' ? 'Review Required' : 'High Risk',
+          description: riskLevel.toUpperCase() === 'REVIEW' ? 'Manual review needed' : 'Enhanced monitoring active',
           intensity: 80
         };
       case 'MEDIUM':
+      case 'MONITOR':
         return {
           color: '#f1c40f',
           bgColor: 'rgba(241, 196, 15, 0.1)',
           icon: '⚡',
-          label: 'Medium Risk',
-          description: 'Standard monitoring',
+          label: riskLevel.toUpperCase() === 'MONITOR' ? 'Monitoring' : 'Medium Risk',
+          description: riskLevel.toUpperCase() === 'MONITOR' ? 'Enhanced monitoring' : 'Suspicious activity detected',
           intensity: 60
         };
       case 'LOW':
+      case 'APPROVE':
         return {
           color: '#27ae60',
           bgColor: 'rgba(39, 174, 96, 0.1)',
           icon: '✅',
-          label: 'Low Risk',
-          description: 'Normal activity',
+          label: riskLevel.toUpperCase() === 'APPROVE' ? 'Approved' : 'Low Risk',
+          description: riskLevel.toUpperCase() === 'APPROVE' ? 'Transaction approved' : 'Normal activity',
           intensity: 30
         };
       case 'MINIMAL':
@@ -134,11 +138,11 @@ export const RiskIndicator: React.FC<RiskIndicatorProps> = ({
         <div className="risk-gauge-container">
           <div className="risk-gauge">
             <div className="gauge-background">
-              <div 
+              <div
                 className="gauge-fill"
-                style={{ 
-                  width: `${config.intensity}%`,
-                  backgroundColor: config.color 
+                style={{
+                  width: `${score * 100}%`,
+                  backgroundColor: config.color
                 }}
               ></div>
             </div>

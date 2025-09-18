@@ -11,12 +11,18 @@ Real-time fraud detection system for monitoring financial transactions and ident
 - Dashboard for security analysts
 - API for transaction validation
 
+## Requirements
+- Python 3.13+ (recommended)
+- Node.js 18+ (for frontend)
+
 ## Quick Start
 ```bash
 # Backend
 cd backend
-pip install -r requirements.txt
-python app.py
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip3 install -r requirements.txt
+python3 app.py
 
 # Frontend
 cd frontend

@@ -330,24 +330,29 @@ def get_statistics():
                 'alerts_count': len(alerts_db)
             })
         
-        # Calculate risk level distribution
-        risk_levels = {}
-        fraud_count = 0
-        
+        # Calculate action distribution based on final decisions
+        action_distribution = {}
+        high_risk_count = 0
+
         for transaction in transactions_db:
-            risk_level = transaction.get('risk_analysis', {}).get('risk_level', 'UNKNOWN')
-            risk_levels[risk_level] = risk_levels.get(risk_level, 0) + 1
-            
-            # Count high-risk transactions as potential fraud
-            if risk_level in ['HIGH', 'CRITICAL']:
-                fraud_count += 1
-        
-        fraud_rate = (fraud_count / total_transactions) * 100 if total_transactions > 0 else 0
+            # Use final decision action, fallback to risk analysis level
+            action = transaction.get('final_decision', {}).get('action')
+            if not action:
+                action = transaction.get('risk_analysis', {}).get('risk_level', 'UNKNOWN')
+
+            action_distribution[action] = action_distribution.get(action, 0) + 1
+
+            # Count transactions requiring review or blocking as high-risk
+            if action in ['BLOCK', 'REVIEW', 'HIGH', 'CRITICAL']:
+                high_risk_count += 1
+
+        fraud_rate = (high_risk_count / total_transactions) * 100 if total_transactions > 0 else 0
         
         return jsonify({
             'total_transactions': total_transactions,
             'fraud_rate': round(fraud_rate, 2),
-            'risk_distribution': risk_levels,
+            'risk_distribution': action_distribution,
+            'high_risk_count': high_risk_count,
             'alerts_count': len(alerts_db),
             'model_status': 'trained' if ml_model.is_trained else 'not_trained'
         })
@@ -531,6 +536,47 @@ def seed_realistic_transactions():
             'location': 'Seoul, South Korea',
             'timestamp': datetime(2025, 9, 17, 23, 45, 0),
             'card_number': '****5678'
+        },
+        # Additional transactions
+        {
+            'id': 'TXN_013',
+            'amount': Decimal('7500.00'),
+            'merchant': 'Cash Advance',
+            'location': 'Beijing, China',
+            'timestamp': datetime(2025, 9, 18, 1, 15, 0),
+            'card_number': '****9012'
+        },
+        {
+            'id': 'TXN_014',
+            'amount': Decimal('65.99'),
+            'merchant': 'McDonald\'s',
+            'location': 'Chicago, IL, US',
+            'timestamp': datetime(2025, 9, 18, 2, 30, 0),
+            'card_number': '****1234'
+        },
+        {
+            'id': 'TXN_015',
+            'amount': Decimal('3200.00'),
+            'merchant': 'Crypto Exchange',
+            'location': 'Unknown Location',
+            'timestamp': datetime(2025, 9, 18, 3, 45, 0),
+            'card_number': '****7890'
+        },
+        {
+            'id': 'TXN_016',
+            'amount': Decimal('125.50'),
+            'merchant': 'Shell Gas Station',
+            'location': 'Houston, TX, US',
+            'timestamp': datetime(2025, 9, 18, 4, 20, 0),
+            'card_number': '****5678'
+        },
+        {
+            'id': 'TXN_017',
+            'amount': Decimal('299.99'),
+            'merchant': 'Best Buy',
+            'location': 'Phoenix, AZ, US',
+            'timestamp': datetime(2025, 9, 18, 5, 0, 0),
+            'card_number': '****1234'
         }
     ]
 

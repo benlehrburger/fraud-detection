@@ -12,12 +12,12 @@ interface DashboardProps {
   onRefresh: () => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ 
-  transactions, 
-  alerts, 
-  statistics, 
-  loading, 
-  onRefresh 
+export const Dashboard: React.FC<DashboardProps> = ({
+  transactions,
+  alerts,
+  statistics,
+  loading,
+  onRefresh: _onRefresh
 }) => {
   // Calculate risk metrics
   const highRiskTransactions = transactions.filter(t => 
@@ -32,10 +32,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
   // Determine overall risk level
   const getOverallRiskLevel = (): 'MINIMAL' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' => {
     if (criticalAlerts.length > 0) return 'CRITICAL';
-    if (highAlerts.length > 2) return 'HIGH';
-    if (highRiskTransactions.length > 5) return 'MEDIUM';
-    if (highRiskTransactions.length > 0) return 'LOW';
-    return 'MINIMAL';
+    if (highAlerts.length > 2 || transactions.filter(t => t.final_decision?.action === 'BLOCK').length > 0) return 'HIGH';
+    if (highAlerts.length > 0 || highRiskTransactions.length > 3) return 'MEDIUM';
+    if (highRiskTransactions.length > 0) return 'MEDIUM';  // Any high-risk transactions should show at least MEDIUM
+    return 'LOW';  // No high-risk transactions = LOW (not MINIMAL)
   };
 
   const overallRiskLevel = getOverallRiskLevel();
