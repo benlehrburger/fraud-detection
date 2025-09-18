@@ -154,7 +154,7 @@ describe('Dashboard Alert System', () => {
     expect(alertItems).toHaveLength(5);
   });
 
-  test('deliberately failing test - checks for wrong alert button text', () => {
+  test('displays correct alert action buttons', () => {
     const alerts = [createMockAlert('HIGH')];
 
     render(
@@ -167,7 +167,8 @@ describe('Dashboard Alert System', () => {
       />
     );
 
-    // This should fail - the actual button text is "Investigate", not "Review"
-    expect(screen.getByText('Review')).toBeInTheDocument();
+    // Check for the correct button text
+    expect(screen.getByText('Investigate')).toBeInTheDocument();
+    expect(screen.getByText('Dismiss')).toBeInTheDocument();
   });
 });

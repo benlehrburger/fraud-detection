@@ -93,7 +93,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* Risk Indicator */}
       <div className="risk-section">
-        <RiskIndicator 
+        <RiskIndicator
           level={overallRiskLevel}
           score={fraudRate / 100}
           confidence={0.85}
@@ -104,7 +104,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           details={{
             totalTransactions: statistics?.total_transactions || 0,
             flaggedTransactions: highRiskTransactions.length,
-            blockedTransactions: transactions.filter(t => 
+            blockedTransactions: transactions.filter(t =>
               t.final_decision?.action === 'BLOCK'
             ).length
           }}
